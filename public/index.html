@@ -9,19 +9,13 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; }
-
-/* Header */
 .header { background: #fff; border-bottom: 1px solid #e8e8e0; padding: 1rem 1.25rem; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; }
 .header-title { font-size: 17px; font-weight: 600; }
 .header-count { font-size: 12px; color: #999; margin-top: 2px; }
-
-/* Entry list */
 .entries { padding: 1rem; max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
 .empty { text-align: center; padding: 4rem 1rem; color: #999; }
 .empty-icon { font-size: 48px; margin-bottom: 12px; }
 .loading { text-align: center; padding: 3rem; color: #aaa; font-size: 14px; }
-
-/* Entry card */
 .card { background: #fff; border-radius: 12px; padding: 1rem 1.125rem; cursor: pointer; border: 1px solid #ebebeb; transition: border-color 0.15s, transform 0.1s; }
 .card:hover { border-color: #ccc; transform: translateY(-1px); }
 .card-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
@@ -31,45 +25,49 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .card-oneliner { font-size: 13px; color: #666; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card-learning { margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; font-size: 12px; color: #aaa; display: flex; gap: 5px; }
 .card-learning span { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-
-/* STAR badges on card */
 .star-badges { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
 .star-badge { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.03em; }
 .badge-s { background: #e8f0fe; color: #2c5fc9; }
 .badge-t { background: #fef3e2; color: #b45309; }
 .badge-a { background: #fce8f3; color: #9c2b6b; }
 .badge-r { background: #e6f9f0; color: #1a7a4a; }
-
-/* Detail view */
 .detail { display: none; position: fixed; inset: 0; background: #f5f5f0; overflow-y: auto; z-index: 20; }
 .detail.open { display: block; }
-.detail-header { background: #fff; border-bottom: 1px solid #e8e8e0; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; }
+.detail-header { background: #fff; border-bottom: 1px solid #e8e8e0; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 8px; position: sticky; top: 0; z-index: 5; }
 .back-btn { display: flex; align-items: center; gap: 4px; font-size: 14px; color: #555; background: none; border: 1px solid #ddd; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
-.del-btn { margin-left: auto; background: none; border: none; color: #ccc; cursor: pointer; font-size: 22px; padding: 4px 8px; }
+.edit-btn { display: flex; align-items: center; gap: 4px; font-size: 13px; color: #2c5fc9; background: #e8f0fe; border: none; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-weight: 500; margin-left: auto; }
+.edit-btn:hover { background: #d0e2ff; }
+.save-btn { display: none; align-items: center; gap: 4px; font-size: 13px; color: #fff; background: #1a7a4a; border: none; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-weight: 500; margin-left: auto; }
+.save-btn:hover { background: #15663d; }
+.cancel-edit-btn { display: none; font-size: 13px; color: #888; background: none; border: 1px solid #ddd; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.del-btn { background: none; border: none; color: #ddd; cursor: pointer; font-size: 20px; padding: 4px 6px; }
 .del-btn:hover { color: #e44; }
 .detail-body { padding: 1.25rem; max-width: 680px; margin: 0 auto; }
 .detail-date { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
 .detail-headline { font-size: 22px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+.detail-headline-input { font-size: 22px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; width: 100%; border: 1.5px solid #2c5fc9; border-radius: 8px; padding: 6px 10px; font-family: inherit; display: none; }
 .detail-oneliner { font-size: 14px; color: #666; margin-bottom: 1.25rem; font-style: italic; }
-
-/* STAR sections */
+.detail-oneliner-input { font-size: 14px; color: #666; margin-bottom: 1.25rem; font-style: italic; width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 6px 10px; font-family: inherit; display: none; }
 .star-section { background: #fff; border-radius: 12px; padding: 1rem 1.125rem; margin-bottom: 10px; border: 1px solid #ebebeb; }
+.star-section.editing { border-color: #2c5fc9; }
 .star-section-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
 .star-s .star-section-label { color: #2c5fc9; }
 .star-t .star-section-label { color: #b45309; }
 .star-a .star-section-label { color: #9c2b6b; }
 .star-r .star-section-label { color: #1a7a4a; }
 .star-section-body { font-size: 14px; color: #333; line-height: 1.75; white-space: pre-wrap; }
+.section-textarea { width: 100%; font-size: 14px; font-family: inherit; line-height: 1.75; color: #333; border: none; outline: none; resize: vertical; min-height: 80px; padding: 0; background: transparent; display: none; }
 .extra-section { background: #fff; border-radius: 12px; padding: 1rem 1.125rem; margin-bottom: 10px; border: 1px solid #ebebeb; }
+.extra-section.editing { border-color: #aaa; }
 .extra-label { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
 .extra-body { font-size: 14px; color: #333; line-height: 1.75; white-space: pre-wrap; }
-
-/* Confirm delete */
 .confirm-bar { display: none; background: #fff3f3; border: 1px solid #fcc; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 12px; font-size: 13px; color: #c44; align-items: center; gap: 10px; flex-wrap: wrap; }
 .confirm-bar.show { display: flex; }
 .confirm-bar button { font-size: 12px; padding: 4px 12px; border-radius: 6px; cursor: pointer; border: none; }
 .confirm-yes { background: #e44; color: #fff; }
 .confirm-no { background: #eee; color: #333; }
+.saved-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a7a4a; color: #fff; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 20px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100; }
+.saved-toast.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -82,15 +80,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     </div>
     <div style="font-size:12px;color:#bbb" id="last-updated"></div>
   </div>
-  <div class="entries" id="entries-list">
-    <div class="loading">Loading entries…</div>
-  </div>
+  <div class="entries" id="entries-list"><div class="loading">Loading entries…</div></div>
 </div>
 
 <div class="detail" id="detail-view">
   <div class="detail-header">
     <button class="back-btn" onclick="closeDetail()">&#8592; Back</button>
-    <button class="del-btn" onclick="confirmDelete()" title="Delete">&#128465;</button>
+    <button class="cancel-edit-btn" id="cancel-edit-btn" onclick="cancelEdit()">Cancel</button>
+    <button class="edit-btn" id="edit-btn" onclick="startEdit()">&#9998; Edit</button>
+    <button class="save-btn" id="save-btn" onclick="saveEdit()">&#10003; Save</button>
+    <button class="del-btn" id="del-btn" onclick="confirmDelete()" title="Delete">&#128465;</button>
   </div>
   <div class="detail-body">
     <div class="confirm-bar" id="confirm-bar">
@@ -100,65 +99,67 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     </div>
     <div class="detail-date" id="d-date"></div>
     <div class="detail-headline" id="d-headline"></div>
+    <input class="detail-headline-input" id="d-headline-input" type="text" placeholder="Headline">
     <div class="detail-oneliner" id="d-oneliner"></div>
+    <input class="detail-oneliner-input" id="d-oneliner-input" type="text" placeholder="One-line summary">
     <div id="d-star"></div>
     <div id="d-extras"></div>
   </div>
 </div>
 
+<div class="saved-toast" id="saved-toast">&#10003; Changes saved</div>
+
 <script>
 const API = '/api/entries';
-let entries = [], currentEntry = null;
+let entries = [], currentEntry = null, isEditing = false;
 
-function formatDate(iso) {
-  return new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-}
-function shortDate(iso) {
-  return new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-}
-function weekday(iso) {
-  return new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday:'long' });
-}
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+const STAR_SECTIONS = [
+  { key: 'situation', label: '🔵 Situation', cls: 'star-s' },
+  { key: 'task',      label: '🎯 Task',      cls: 'star-t' },
+  { key: 'action',    label: '⚡ Action',    cls: 'star-a' },
+  { key: 'result',    label: '✅ Result',    cls: 'star-r' },
+];
+const EXTRA_SECTIONS = [
+  { key: 'learning',    label: '💡 Key learning' },
+  { key: 'tomorrow',    label: "🔜 Tomorrow's focus" },
+  { key: 'feeling',     label: '😌 Mindset & energy' },
+  { key: 'summary',     label: '📝 Summary' },
+  { key: 'wins',        label: '🏆 Wins' },
+  { key: 'differently', label: "🔄 What I'd do differently" },
+];
+
+function formatDate(iso) { return new Date(iso+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'}); }
+function shortDate(iso)  { return new Date(iso+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+function weekday(iso)    { return new Date(iso+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long'}); }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 async function loadEntries() {
   try {
-    const r  = await fetch(API);
-    entries  = await r.json();
+    entries = await (await fetch(API)).json();
     renderList();
-    document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
-  } catch(e) {
-    document.getElementById('entries-list').innerHTML = '<div class="loading">Could not load entries.</div>';
-  }
+    document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  } catch { document.getElementById('entries-list').innerHTML = '<div class="loading">Could not load entries.</div>'; }
 }
 
 function renderList() {
   const count = entries.length;
-  document.getElementById('entry-count').textContent = count + (count === 1 ? ' entry' : ' entries');
+  document.getElementById('entry-count').textContent = count + (count===1?' entry':' entries');
   const el = document.getElementById('entries-list');
-  if (!count) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📓</div><p>No entries yet.<br><br>Send a voice note to your JournalBot on Telegram to get started.</p></div>';
-    return;
-  }
+  if (!count) { el.innerHTML='<div class="empty"><div class="empty-icon">📓</div><p>No entries yet.<br><br>Send a message to JournalBot on Telegram to get started.</p></div>'; return; }
   el.innerHTML = entries.map(e => {
-    const hasStar = e.situation || e.task || e.action || e.result;
-    const badges  = hasStar ? `<div class="star-badges">
-      ${e.situation ? '<span class="star-badge badge-s">S</span>' : ''}
-      ${e.task      ? '<span class="star-badge badge-t">T</span>' : ''}
-      ${e.action    ? '<span class="star-badge badge-a">A</span>' : ''}
-      ${e.result    ? '<span class="star-badge badge-r">R</span>' : ''}
+    const hasStar = e.situation||e.task||e.action||e.result;
+    const badges = hasStar ? `<div class="star-badges">
+      ${e.situation?'<span class="star-badge badge-s">S</span>':''}
+      ${e.task     ?'<span class="star-badge badge-t">T</span>':''}
+      ${e.action   ?'<span class="star-badge badge-a">A</span>':''}
+      ${e.result   ?'<span class="star-badge badge-r">R</span>':''}
     </div>` : '';
     return `<div class="card" onclick="openDetail('${esc(e.id)}')">
-      <div class="card-meta">
-        <span class="card-weekday">${weekday(e.date)}</span>
-        <span class="card-date">· ${shortDate(e.date)}</span>
-      </div>
-      <div class="card-headline">${esc(e.headline || 'Untitled')}</div>
-      <div class="card-oneliner">${esc(e.oneliner || '')}</div>
+      <div class="card-meta"><span class="card-weekday">${weekday(e.date)}</span><span class="card-date">· ${shortDate(e.date)}</span></div>
+      <div class="card-headline">${esc(e.headline||'Untitled')}</div>
+      <div class="card-oneliner">${esc(e.oneliner||'')}</div>
       ${badges}
-      ${e.learning ? `<div class="card-learning">💡 <span>${esc(e.learning)}</span></div>` : ''}
+      ${e.learning?`<div class="card-learning">💡 <span>${esc(e.learning)}</span></div>`:''}
     </div>`;
   }).join('');
 }
@@ -166,51 +167,109 @@ function renderList() {
 function openDetail(id) {
   currentEntry = entries.find(e => e.id === id);
   if (!currentEntry) return;
-  document.getElementById('d-date').textContent     = formatDate(currentEntry.date);
-  document.getElementById('d-headline').textContent = currentEntry.headline || 'Untitled';
-  document.getElementById('d-oneliner').textContent = currentEntry.oneliner || '';
-  document.getElementById('confirm-bar').classList.remove('show');
-
-  // STAR sections
-  const starSections = [
-    { key: 'situation', label: '🔵 Situation', cls: 'star-s' },
-    { key: 'task',      label: '🎯 Task',      cls: 'star-t' },
-    { key: 'action',    label: '⚡ Action',    cls: 'star-a' },
-    { key: 'result',    label: '✅ Result',    cls: 'star-r' },
-  ];
-  document.getElementById('d-star').innerHTML = starSections.map(sec => {
-    const content = currentEntry[sec.key] || currentEntry.reflections?.[sec.key];
-    if (!content) return '';
-    return `<div class="star-section ${sec.cls}">
-      <div class="star-section-label">${sec.label}</div>
-      <div class="star-section-body">${esc(content)}</div>
-    </div>`;
-  }).join('');
-
-  // Extra sections
-  const extras = [
-    { key: 'learning', label: '💡 Key learning' },
-    { key: 'tomorrow', label: '🔜 Tomorrow\'s focus' },
-    { key: 'feeling',  label: '😌 Mindset & energy' },
-    // fallback for old-style entries
-    { key: 'summary',  label: '📝 Summary' },
-    { key: 'wins',     label: '🏆 Wins' },
-    { key: 'differently', label: '🔄 What I\'d do differently' },
-  ];
-  document.getElementById('d-extras').innerHTML = extras.map(sec => {
-    const content = currentEntry[sec.key] || currentEntry.reflections?.[sec.key];
-    if (!content) return '';
-    return `<div class="extra-section">
-      <div class="extra-label">${sec.label}</div>
-      <div class="extra-body">${esc(content)}</div>
-    </div>`;
-  }).join('');
-
+  isEditing = false;
+  renderDetail();
   document.getElementById('detail-view').classList.add('open');
   document.getElementById('detail-view').scrollTop = 0;
 }
 
+function renderDetail() {
+  document.getElementById('d-date').textContent           = formatDate(currentEntry.date);
+  document.getElementById('d-headline').textContent       = currentEntry.headline || 'Untitled';
+  document.getElementById('d-headline-input').value       = currentEntry.headline || '';
+  document.getElementById('d-oneliner').textContent       = currentEntry.oneliner || '';
+  document.getElementById('d-oneliner-input').value       = currentEntry.oneliner || '';
+
+  document.getElementById('d-star').innerHTML = STAR_SECTIONS.map(sec => {
+    const content = currentEntry[sec.key] || currentEntry.reflections?.[sec.key] || '';
+    return `<div class="star-section ${sec.cls}" id="sec-${sec.key}">
+      <div class="star-section-label">${sec.label}</div>
+      <div class="star-section-body" id="body-${sec.key}">${esc(content)}</div>
+      <textarea class="section-textarea" id="edit-${sec.key}">${esc(content)}</textarea>
+    </div>`;
+  }).join('');
+
+  document.getElementById('d-extras').innerHTML = EXTRA_SECTIONS.map(sec => {
+    const content = currentEntry[sec.key] || currentEntry.reflections?.[sec.key] || '';
+    if (!content) return '';
+    return `<div class="extra-section" id="sec-${sec.key}">
+      <div class="extra-label">${sec.label}</div>
+      <div class="extra-body" id="body-${sec.key}">${esc(content)}</div>
+      <textarea class="section-textarea" id="edit-${sec.key}">${esc(content)}</textarea>
+    </div>`;
+  }).join('');
+
+  document.getElementById('confirm-bar').classList.remove('show');
+  setEditMode(false);
+}
+
+function setEditMode(editing) {
+  isEditing = editing;
+  document.getElementById('edit-btn').style.display        = editing ? 'none'  : 'flex';
+  document.getElementById('save-btn').style.display        = editing ? 'flex'  : 'none';
+  document.getElementById('cancel-edit-btn').style.display = editing ? 'flex'  : 'none';
+  document.getElementById('del-btn').style.display         = editing ? 'none'  : 'inline-block';
+  document.getElementById('d-headline').style.display       = editing ? 'none'  : 'block';
+  document.getElementById('d-headline-input').style.display = editing ? 'block' : 'none';
+  document.getElementById('d-oneliner').style.display       = editing ? 'none'  : 'block';
+  document.getElementById('d-oneliner-input').style.display = editing ? 'block' : 'none';
+
+  const allSecs = [...STAR_SECTIONS, ...EXTRA_SECTIONS];
+  allSecs.forEach(sec => {
+    const body = document.getElementById('body-' + sec.key);
+    const ta   = document.getElementById('edit-' + sec.key);
+    const wrap = document.getElementById('sec-'  + sec.key);
+    if (!body || !ta) return;
+    body.style.display = editing ? 'none'  : 'block';
+    ta.style.display   = editing ? 'block' : 'none';
+    if (wrap) wrap.classList.toggle('editing', editing);
+    if (editing) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+  });
+}
+
+function startEdit() { setEditMode(true); }
+
+function cancelEdit() {
+  document.getElementById('d-headline-input').value = currentEntry.headline || '';
+  document.getElementById('d-oneliner-input').value = currentEntry.oneliner || '';
+  [...STAR_SECTIONS, ...EXTRA_SECTIONS].forEach(sec => {
+    const ta = document.getElementById('edit-' + sec.key);
+    if (ta) ta.value = currentEntry[sec.key] || currentEntry.reflections?.[sec.key] || '';
+  });
+  setEditMode(false);
+}
+
+async function saveEdit() {
+  const updated = { ...currentEntry };
+  updated.headline = document.getElementById('d-headline-input').value.trim() || updated.headline;
+  updated.oneliner = document.getElementById('d-oneliner-input').value.trim() || updated.oneliner;
+  [...STAR_SECTIONS, ...EXTRA_SECTIONS].forEach(sec => {
+    const ta = document.getElementById('edit-' + sec.key);
+    if (ta) updated[sec.key] = ta.value.trim();
+  });
+  try {
+    const res  = await fetch(API + '/' + currentEntry.id, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(updated) });
+    const data = await res.json();
+    if (data.ok) {
+      currentEntry = data.entry;
+      const idx = entries.findIndex(e => e.id === currentEntry.id);
+      if (idx >= 0) entries[idx] = currentEntry;
+      renderList();
+      setEditMode(false);
+      renderDetail();
+      showToast();
+    }
+  } catch { alert('Could not save — please try again.'); }
+}
+
+function showToast() {
+  const t = document.getElementById('saved-toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
 function closeDetail() {
+  if (isEditing) cancelEdit();
   document.getElementById('detail-view').classList.remove('open');
   currentEntry = null;
 }

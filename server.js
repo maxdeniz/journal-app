@@ -39,6 +39,17 @@ app.post('/api/entries', (req, res) => {
   res.json({ ok: true, entry });
 });
 
+// PUT — update existing entry (for inline edits)
+app.put('/api/entries/:id', (req, res) => {
+  const entries = loadEntries();
+  const idx     = entries.findIndex(e => e.id === req.params.id);
+  if (idx < 0) return res.status(404).json({ ok: false, error: 'Not found' });
+  entries[idx]  = { ...entries[idx], ...req.body, id: req.params.id };
+  saveEntries(entries);
+  console.log(`[${new Date().toISOString()}] Entry updated: ${entries[idx].date}`);
+  res.json({ ok: true, entry: entries[idx] });
+});
+
 // DELETE entry
 app.delete('/api/entries/:id', (req, res) => {
   const entries = loadEntries().filter(e => e.id !== req.params.id);
