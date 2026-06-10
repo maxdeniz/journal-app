@@ -6,7 +6,7 @@ const os      = require('os');
 
 const app       = express();
 const PORT      = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'entries.json');
+const DATA_FILE = process.env.DATA_PATH || path.join('/data', 'entries.json');
 
 app.use(cors());
 app.use(express.json());
@@ -19,6 +19,8 @@ function loadEntries() {
 }
 
 function saveEntries(entries) {
+  const dir = path.dirname(DATA_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(DATA_FILE, JSON.stringify(entries, null, 2));
 }
 
